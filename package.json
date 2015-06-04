@@ -1,6 +1,6 @@
 {
   "name": "valkyrja",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "the deploy tool",
   "bin": {
     "valk": "bin/valkyrja"
