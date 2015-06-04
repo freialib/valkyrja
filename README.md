@@ -8,11 +8,11 @@ Install via,
 You will have access to the `valk` command.
 
 If you ever need a specific copy of `valkyrja` for a project simply install
-that version into the project in question:
+that version into the project:
 
 	npm i -S valkyrja
 
-After doing so whenever you run any `valk` commands they will be executed by
+After doing so, whenever you run any `valk` commands they will be executed by
 the specific version of `valkyrja` you have installed in the project instead of
 the global `valkyrja`
 
@@ -27,7 +27,7 @@ Type `valk` for **command and usage help**
 
 ## Files
 
-The valkyrja command understands the following files,
+The `valk` command understands the following files,
 
  - `.valkyrja.toml`, main configuration file and only mandatory file. Specify
    servers, deploy actions, files to sync, files to ignore, etc in here; you
@@ -35,17 +35,14 @@ The valkyrja command understands the following files,
 
  - `.valkyrja.user.toml`, main user file. You can create a default one via
    `valk make user`. The contents of this file will be merged into
-   `.valkyrja.user.toml` before any command is executed. If `.gitignore` is
-   present an entry to it will also be automatically added when runnning
-   `valk make user` if its not present already
+   `.valkyrja.toml` before any command is executed.
 
- - `.valkyrja.js` is your main tools file. Not required unless specific options
-   such as `check` or `build` are set to non-`false` on any server.
-   `valkyrja` will call the corresponding function exported by the file and
-   expect a `Promise`, based on the promise the deploy process will continue
-   or halt. The expectation is that you perform any production build steps or
-   any checks and resolve or reject the promise based on the result of your
-   tools; deployment will continue only if promise is fulfilled.
+ - `.valkyrja.js` is an optional tools file. `valk` will call the
+   corresponding function exported by the file and expect a `Promise`. Based on 
+   the `Promise` the deploy process will continue or halt. The expectation is that 
+   you perform any production build steps or any checks and resolve or reject the 
+   promise based on the result of your tooling; deployment will continue only if 
+   promise is fulfilled.
 
 ## Testing Deployment Strategy
 
@@ -86,40 +83,39 @@ it would ask you for the password to do that.
 ### User must belong to group he is trying to change
 
 If the user trying to sync does not belong to the group he is trying to sync to
-the sync command will fail when chgrp is executed due to the command in 
-question returning non 0 exit code.
+the sync command will fail when `chgrp` is executed due to the command in 
+question returning non `0` exit code.
 
 To add a user to the group the following must be executed on the server,
 
 	sudo usermod -a -G GROUPNAME YOURUSERNAME
 
-**Important:** make sure to have -a (ie. append) flag there or you will remove
+**Important:** make sure to have `-a` (ie. append) flag there or you will remove
 the user from every other group; if you do that on your local machine where you
-are in the `sudo`'er group for example ommiting it will remove you from the 
-`sudo`'er group preventing you from executing commands with `sudo`
+are in the `sudo`'er group you will remove yourself from the `sudo`'er group 
+preventing you from executing commands with `sudo`
 
 If you wish to run your own custom `chgrp` command you can disable the in-built
 one by setting `autogroup = false` on the root of the configuration file.
 
 You can access the host group via the `<<group>>` variable when adding 
-postdeploy commands. So, for example, `chgrp -R -P <<group>> .` would add
-the current command.
+`postdeploy` commands. eg. `chgrp -R -P <<group>> .`
 
 If you need extra variables to achieve the command you can add them to servers,
-they will be available just like how `group` is available as `<<group>>`. But
-make sure they are strings and can never be anything but strings. If you add a
-non-string parameter to the server, it will not be available.
+then they will be available just like how `group` is available as `<<group>>`. 
+But make sure they are strings and can never be anything but strings. If you 
+add a non-string parameter to the server, it will not be available.
 
 ### Ignore exit status of some commands
 
 You may find some commands just annoyingly return non `0` for certain cases.
-Cases you don't really consider error cases. eg. `grep` returns non-zero if it
+Cases you don't really consider error cases. eg. `grep` returns non-`0` if it
 can't match anything. If you have `ssh.stop-on-errors` this can be even more
 annoying then just a little bit of red text every deploy. 
 
 To ignore the exit code of a commands simply pass their output though another 
-command. eg. if we want to ignore the exit status of a `grep` commands then 
-we would write the command as `grep "something" | cat`
+command. eg. if you want to ignore the exit status of a `grep` commands then 
+you would write the command as `grep ... | cat`
 
 ## Q&A
 
