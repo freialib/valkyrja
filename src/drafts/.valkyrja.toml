@@ -1,0 +1,96 @@
+# This file uses TOML syntax
+# https://github.com/toml-lang/toml
+
+# If using sublime text for syntax highlight do the following
+# cd ~/.config/sublime-text-3/Packages
+# git clone https://github.com/Gakai/TOML
+
+# For private settings you'll need a .valkyrja.user.toml
+# Any settings in it will be merged into this file
+
+autogroup = true   # add chgrp command
+
+[servers]
+
+	[servers.defaults]
+	build = "production"
+	check = "all"
+	group = "server-group"
+
+	[[servers.development]]
+	build = "debug"
+	check = false
+	title = "Sjöfn"
+	host  = "localhost"
+	path  = "~/example.server/development"
+
+	[[servers.production]]
+	title = "Frigg"
+	host  = "localhost"
+	path  = "~/example.server/production1"
+	group = "www-data"
+
+	[[servers.production]]
+	title = "Eir"
+	host  = "localhost"
+	path  = "~/example.server/production2"
+	group = "www-data"
+
+	[[servers.staging]]
+	check = false
+	title = "Sága"
+	host  = "localhost"
+	path  = "~/example.server/staging"
+
+[postdeploy]
+
+	# commands will be executed after every deploy
+	# cwd will be set to the server path
+
+	defaults = [
+		# empty
+	]
+
+	staging = [
+		"./check"
+	]
+
+	development = [
+		"./check"
+	]
+
+[rsync]
+
+	# please see rsync man page for options
+
+	verbose = true         # show files transfered
+	delete = true          # delete extraneous files from dest dirs
+	checksum = true        # skip based on checksum, not mod-time & size
+	recursive = true       # recurse into directories
+	executability = true   # preserve executability
+	links = true           # copy symlinks as symlinks
+	safe-links = true      # ignore symlinks that point outside the tree
+	inplace = true         # update destination files in-place
+	compress = true        # compress file data during the transfer
+	human-readable = true  # output numbers in a human-readable format
+
+	exclude = [
+		".git",
+		".valkyrja.*",
+		"*.log",
+		".DS_Store",
+		"Thumbs.db"
+	]
+
+	include = [
+		# empty
+	]
+
+	patterns = [
+		# empty
+	]
+
+[ssh]
+
+	stop-on-error = false
+	timeout = 600000 # ms (10min)

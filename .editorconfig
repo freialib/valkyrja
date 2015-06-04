@@ -1,0 +1,27 @@
+root = true
+
+[*.{php,js,jsx,css,scss,txt,md,json,xml,html,toml}]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+[{src/**/*,src/*,bin/valkyrja}]
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 4
+
+[{package.json}]
+indent_style = space
+indent_size = 2
+
+[*.toml]
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 4
+
+[*.md]
+# 2 spaces at end of line means line break
+# so we can't trim spaces from markdown
+trim_trailing_whitespace = false
+indent_style = tab
+indent_size = 4

@@ -1,0 +1,47 @@
+node_modules
+!src/node_modules
+
+
+# Operating System Files
+# ------------------------
+
+.DS_Store
+Thumbs.db
+.sass-cache
+.bundle
+.vagrant
+*~
+.directory
+.Trash-*
+.log
+
+
+# Editor Files
+# ------------------------
+
+# sublimetext
+*.sublime-workspace
+*.sublime-project
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# eclipse
+.settings
+.project
+.buildpath
+
+# komodo
+*.komodoproject
+.komodotools
+
+# phpstorm
+.idea
+
+# netbeans
+nbproject
+nbbuild
+nbdist
+nb-configuration.xml
+.nb-gradle
+nbactions.xml

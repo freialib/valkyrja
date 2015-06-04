@@ -1,0 +1,4 @@
+# This file should never be commited in source control
+
+[servers.defaults]
+username = "yourusername"

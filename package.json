@@ -1,0 +1,29 @@
+{
+  "name": "valkyrja",
+  "version": "1.1.0",
+  "description": "the deploy tool",
+  "bin": {
+    "valk": "bin/valkyrja"
+  },
+  "main": "src/valkyrja.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "srcspider <source.spider@gmail.com>",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "chalk": "^1.0.0",
+    "findup-sync": "^0.2.1",
+    "is-there": "^2.0.0",
+    "lie": "^2.9.1",
+    "lodash.clone": "^3.0.2",
+    "lodash.foreach": "^3.0.3",
+    "lodash.isboolean": "^3.0.1",
+    "lodash.isstring": "^3.0.1",
+    "lodash.merge": "^3.3.1",
+    "resolve": "^1.1.6",
+    "rsync": "^0.4.0",
+    "simple-ssh": "^0.8.5",
+    "toml": "^2.2.2"
+  }
+}

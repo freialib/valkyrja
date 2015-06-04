@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+process.title = 'valkyrja';
+
+var findup = require('findup-sync');
+var resolve = require('resolve').sync;
+
+var valkpath;
+
+try {
+	// try to load local version of valkyrja if present
+	valkpath = resolve('valkyrja', { basedir: process.cwd() });
+}
+catch (e) { // no local copy?
+	// try to load the cli copy of valkyrja otherwise
+	valkpath = findup('src/valkyrja.js', { cwd: __dirname });
+
+	if ( ! valkpath) {
+		console.log('Failed to load global valkyrja');
+		process.exit(500);
+	}
+}
+
+if ( ! valkpath) {
+	console.log('Failed to load valkyrja');
+	process.exit(500);
+}
+
+require(valkpath);
