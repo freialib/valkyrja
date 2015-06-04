@@ -82,7 +82,7 @@ it would ask you for the password to do that.
 
 ### User must belong to group he is trying to change
 
-If the user trying to sync does not belong to the group he is trying to sync to
+If the user trying to sync does not belong to the group he is trying to sync to,
 the sync command will fail when `chgrp` is executed due to the command in 
 question returning non `0` exit code.
 
@@ -90,10 +90,10 @@ To add a user to the group the following must be executed on the server,
 
 	sudo usermod -a -G GROUPNAME YOURUSERNAME
 
-**Important:** make sure to have `-a` (ie. append) flag there or you will remove
-the user from every other group; if you do that on your local machine where you
-are in the `sudo`'er group you will remove yourself from the `sudo`'er group 
-preventing you from executing commands with `sudo`
+**Important Note!** make sure to have `-a` (ie. append) flag there or you will 
+remove the user from every other group. If you do that to yourself on your local 
+machine where you are in the `sudo`'er group you will remove yourself from the 
+`sudo`'er group preventing you from executing commands with `sudo`
 
 If you wish to run your own custom `chgrp` command you can disable the in-built
 one by setting `autogroup = false` on the root of the configuration file.
