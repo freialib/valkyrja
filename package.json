@@ -5,6 +5,10 @@
   "bin": {
     "valk": "bin/valkyrja"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freialib/valkyrja"
+  },
   "main": "src/valkyrja.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

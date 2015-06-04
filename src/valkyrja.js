@@ -15,9 +15,23 @@ if ( ! cmd) {
 	cmd = 'help';
 }
 
-if (['make', 'clean', 'help', 'deploy', 'ls', 'diff', 'dry-run'].indexOf(cmd) == -1) {
-	console.log('Err: unrecognized command "' + cmd + '"');
+if (['--help', '-help', '-h', '/?'].indexOf(cmd) != -1) {
+	cmd = 'help';
+}
+
+if (['-v', '-version', '--version'].indexOf(cmd) != -1) {
+	cmd = 'version';
+}
+
+if (cmd == 'version') {
+	var pkg = require(__dirname + '/../package.json');
+	console.log(pkg.version);
+	process.exit(0);
+}
+
+if (['make', 'clean', 'help', 'deploy', 'ls', 'diff', 'dry-run', 'check', 'build', 'diff-file'].indexOf(cmd) == -1) {
 	console.log(c.red('valkyrja') + ': never heard of the command ' + c.magenta(cmd));
+	console.log('Need help? type ' + c.dim('valk help'));
 	process.exit(500);
 }
 
