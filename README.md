@@ -25,6 +25,21 @@ You can also setup any specific files at any time via `valk make user` and
 
 Type `valk` for **command and usage help**
 
+Here is a potentially incomplete list of available commands, more details
+on the command help.
+
+	make       - create required files
+	deploy     - deploy local copy
+	dry-run    - simulate deploy
+	diff       - diff servers with local copy
+	diff-file  - diff file with local copy
+	ls         - list servers
+	clean      - remove junk
+	check      - run tools.check
+	build      - run tools.build
+	version    - print version
+	help       - help page
+
 ## Files
 
 The `valk` command understands the following files,
@@ -38,11 +53,11 @@ The `valk` command understands the following files,
    `.valkyrja.toml` before any command is executed.
 
  - `.valkyrja.js` is an optional tools file. `valk` will call the
-   corresponding function exported by the file and expect a `Promise`. Based on 
-   the `Promise` the deploy process will continue or halt. The expectation is that 
-   you perform any production build steps or any checks and resolve or reject the 
-   promise based on the result of your tooling; deployment will continue only if 
-   promise is fulfilled.
+   corresponding function exported by the file and expect a `Promise`. Based 
+   on the `Promise` the deploy process will continue or halt. The expectation 
+   is that you perform any production build steps or any checks and resolve or 
+   reject the promise based on the result of your tooling; deployment will 
+   continue only if promise is fulfilled.
 
 ## Testing Deployment Strategy
 
@@ -77,6 +92,44 @@ You'll be asked for your local password. You can test it worked using:
 
 You should see it list your home directory; if you didn't do the `ssh-copy-id`
 it would ask you for the password to do that.
+
+## Useful .valkyrja.js
+
+The generated `.valkyrja.js` is designed to only provide placeholders and not 
+blow up in your face when you try to do anything. Here is an example of one
+that is actually useful:
+
+	var Promise = require('lie');
+	var cmdspawn = require('cmdspawn');
+	var c = require('chalk');
+	
+	var cmd = cmdspawn({
+		tracking : false, // show start and end of command
+		verbose  : false  // write executed commands to console
+	});
+	
+	module.exports = {
+		
+		build: function (type, category, host) {
+			var p = Promise.resolve();
+			p = p.then(cmd.f('gulp build --color'), cmd.silent);
+			return p;
+		},
+		
+		check: function (type, category, host) {
+			var p = Promise.resolve();
+			
+			if (type == 'all' || type == 'php') {
+				p = p.then(cmd.f('phpunit -c src/server/api/phpunit.xml --coverage-text --color'), cmd.silent);
+			}
+			
+			if (type == 'all' || type == 'js') {
+				p = p.then(cmd.f('mocha --color --recursive src/client/node_modules/.spec'), cmd.silent);
+			}
+			
+			return p;
+		}
+	};
 
 ## Gotchas
 
