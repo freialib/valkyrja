@@ -24,6 +24,12 @@ autogroup = true # auto-add chgrp command
 	host  = "localhost"
 	path  = "~/example/development"
 
+	[[servers.staging]]
+	check = false
+	title = "Sága"
+	host  = "localhost"
+	path  = "~/example/staging"
+
 	[[servers.production]]
 	title = "Frigg"
 	host  = "localhost"
@@ -36,12 +42,6 @@ autogroup = true # auto-add chgrp command
 	path  = "~/example/production-2"
 	group = "www-data"
 
-	[[servers.staging]]
-	check = false
-	title = "Sága"
-	host  = "localhost"
-	path  = "~/example/staging"
-
 [postdeploy]
 
 	# commands will be executed after every deploy
@@ -51,15 +51,15 @@ autogroup = true # auto-add chgrp command
 		# options for all categories
 	]
 
+	development = [
+		# empty
+	]
+
 	staging = [
 		# empty
 	]
 
 	production = [
-		# empty
-	]
-
-	development = [
 		# empty
 	]
 
