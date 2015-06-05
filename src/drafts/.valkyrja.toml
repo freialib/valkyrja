@@ -8,7 +8,7 @@
 # For private settings you'll need a .valkyrja.user.toml
 # Any settings in it will be merged into this file
 
-autogroup = true   # add chgrp command
+autogroup = true # auto-add chgrp command
 
 [servers]
 
@@ -18,29 +18,29 @@ autogroup = true   # add chgrp command
 	group = "server-group"
 
 	[[servers.development]]
-	build = "debug"
+	build = false
 	check = false
 	title = "Sjöfn"
 	host  = "localhost"
-	path  = "~/example.server/development"
+	path  = "~/example/development"
 
 	[[servers.production]]
 	title = "Frigg"
 	host  = "localhost"
-	path  = "~/example.server/production1"
+	path  = "~/example/production-1"
 	group = "www-data"
 
 	[[servers.production]]
 	title = "Eir"
 	host  = "localhost"
-	path  = "~/example.server/production2"
+	path  = "~/example/production-2"
 	group = "www-data"
 
 	[[servers.staging]]
 	check = false
 	title = "Sága"
 	host  = "localhost"
-	path  = "~/example.server/staging"
+	path  = "~/example/staging"
 
 [postdeploy]
 
@@ -48,15 +48,19 @@ autogroup = true   # add chgrp command
 	# cwd will be set to the server path
 
 	defaults = [
-		# empty
+		# options for all categories
 	]
 
 	staging = [
-		"./check"
+		# empty
+	]
+
+	production = [
+		# empty
 	]
 
 	development = [
-		"./check"
+		# empty
 	]
 
 [rsync]
