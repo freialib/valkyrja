@@ -15,32 +15,23 @@ autogroup = true # auto-add chgrp command
 	[servers.defaults]
 	build = "production"
 	check = "all"
-	group = "server-group"
+	group = "www-data"
+
+	# For multi-server categories you can use both array and hashes. You will
+	# need hashes if you want private configuration per server in category.
 
 	[[servers.development]]
 	build = false
 	check = false
 	title = "Sjöfn"
-	host  = "localhost"
-	path  = "~/example/development"
+	host  = "your.private.server"
+	path  = "/var/www/project/1.x"
+	group = "apache"
 
-	[[servers.staging]]
-	check = false
-	title = "Sága"
-	host  = "localhost"
-	path  = "~/example/staging"
-
-	[[servers.production]]
-	title = "Frigg"
-	host  = "localhost"
-	path  = "~/example/production-1"
-	group = "www-data"
-
-	[[servers.production]]
+	[servers.test.local]
 	title = "Eir"
 	host  = "localhost"
-	path  = "~/example/production-2"
-	group = "www-data"
+	path  = "~/example/staging"
 
 [postdeploy]
 
@@ -79,9 +70,16 @@ autogroup = true # auto-add chgrp command
 	human-readable = true  # output numbers in a human-readable format
 
 	exclude = [
-		".git",
 		".valkyrja.*",
+		".git*",
+		".hg",
+		".svn",
+		".CVS",
+		".idea",
 		"*.log",
+		"*~",
+		"*.tar.bz2",
+		"*.tgz",
 		".DS_Store",
 		"Thumbs.db"
 	]

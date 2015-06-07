@@ -1,4 +1,7 @@
 # This file should never be commited in source control
 
 [servers.defaults]
-username = "yourusername"
+username = "serverusername"
+
+[servers.test.local]
+username = "localusername"

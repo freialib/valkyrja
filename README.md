@@ -101,12 +101,19 @@ that is actually useful:
 
 	var Promise = require('lie');
 	var cmdspawn = require('cmdspawn');
-	var c = require('chalk');
+	var _ = require('shadow.lodash');
 	
 	var cmd = cmdspawn({
 		tracking : false, // show start and end of command
 		verbose  : false  // write executed commands to console
 	});
+	
+	var excludeNPMDevDeps = function (rsync) {
+		var pkg = require('./package.json');
+		_.each(pkg.devDependencies, function (version, name) {
+			rsync.exclude('node_modules/' + name);
+		});
+	}
 	
 	module.exports = {
 		
@@ -120,15 +127,38 @@ that is actually useful:
 			var p = Promise.resolve();
 			
 			if (type == 'all' || type == 'php') {
-				p = p.then(cmd.f('phpunit -c src/server/api/phpunit.xml --coverage-text --color'), cmd.silent);
+				p = p.then(cmd.f([
+						'phpunit',
+						'-c src/server/api/phpunit.xml',
+						'--coverage-text',
+						'--color'
+					].join(' ')), cmd.silent);
 			}
 			
 			if (type == 'all' || type == 'js') {
-				p = p.then(cmd.f('mocha --color --recursive src/client/node_modules/.spec'), cmd.silent);
+				p = p.then(cmd.f([
+						'mocha',
+						'--color',
+						'--recursive',
+						'src/client/node_modules/.spec'
+					].join(' ')), cmd.silent);
 			}
 			
 			return p;
+		},
+		
+		confdryrun: function (conf, rsync, ssh, host) {
+			excludeNPMDevDeps(rsync);
+		},
+		
+		confdeploy: function (conf, rsync, ssh, host) {
+			excludeNPMDevDeps(rsync);
+		},
+		
+		confdiff: function (conf, rsync, ssh, host) {
+			excludeNPMDevDeps(rsync);
 		}
+		
 	};
 
 ## Gotchas
