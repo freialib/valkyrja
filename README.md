@@ -99,67 +99,69 @@ The generated `.valkyrja.js` is designed to only provide placeholders and not
 blow up in your face when you try to do anything. Here is an example of one
 that is actually useful:
 
-	var Promise = require('lie');
-	var cmdspawn = require('cmdspawn');
-	var _ = require('shadow.lodash');
-	
-	var cmd = cmdspawn({
-		tracking : false, // show start and end of command
-		verbose  : false  // write executed commands to console
+```js
+var Promise = require('lie');
+var cmdspawn = require('cmdspawn');
+var _ = require('shadow.lodash');
+
+var cmd = cmdspawn({
+	tracking : false, // show start and end of command
+	verbose  : false  // write executed commands to console
+});
+
+var excludeNPMDevDeps = function (rsync) {
+	var pkg = require('./package.json');
+	_.each(pkg.devDependencies, function (version, name) {
+		rsync.exclude('node_modules/' + name);
 	});
+}
+
+module.exports = {
 	
-	var excludeNPMDevDeps = function (rsync) {
-		var pkg = require('./package.json');
-		_.each(pkg.devDependencies, function (version, name) {
-			rsync.exclude('node_modules/' + name);
-		});
-	}
+	build: function (type, category, host) {
+		var p = Promise.resolve();
+		p = p.then(cmd.f('gulp build --color'), cmd.silent);
+		return p;
+	},
 	
-	module.exports = {
+	check: function (type, category, host) {
+		var p = Promise.resolve();
 		
-		build: function (type, category, host) {
-			var p = Promise.resolve();
-			p = p.then(cmd.f('gulp build --color'), cmd.silent);
-			return p;
-		},
-		
-		check: function (type, category, host) {
-			var p = Promise.resolve();
-			
-			if (type == 'all' || type == 'php') {
-				p = p.then(cmd.f([
-						'phpunit',
-						'-c src/server/api/phpunit.xml',
-						'--coverage-text',
-						'--color'
-					].join(' ')), cmd.silent);
-			}
-			
-			if (type == 'all' || type == 'js') {
-				p = p.then(cmd.f([
-						'mocha',
-						'--color',
-						'--recursive',
-						'src/client/node_modules/.spec'
-					].join(' ')), cmd.silent);
-			}
-			
-			return p;
-		},
-		
-		confdryrun: function (conf, rsync, ssh, host) {
-			excludeNPMDevDeps(rsync);
-		},
-		
-		confdeploy: function (conf, rsync, ssh, host) {
-			excludeNPMDevDeps(rsync);
-		},
-		
-		confdiff: function (conf, rsync, ssh, host) {
-			excludeNPMDevDeps(rsync);
+		if (type == 'all' || type == 'php') {
+			p = p.then(cmd.f([
+					'phpunit',
+					'-c src/server/api/phpunit.xml',
+					'--coverage-text',
+					'--color'
+				].join(' ')), cmd.silent);
 		}
 		
-	};
+		if (type == 'all' || type == 'js') {
+			p = p.then(cmd.f([
+					'mocha',
+					'--color',
+					'--recursive',
+					'src/client/node_modules/.spec'
+				].join(' ')), cmd.silent);
+		}
+		
+		return p;
+	},
+	
+	confdryrun: function (conf, rsync, ssh, host) {
+		excludeNPMDevDeps(rsync);
+	},
+	
+	confdeploy: function (conf, rsync, ssh, host) {
+		excludeNPMDevDeps(rsync);
+	},
+	
+	confdiff: function (conf, rsync, ssh, host) {
+		excludeNPMDevDeps(rsync);
+	}
+	
+};
+```
 
 ## Gotchas
 
