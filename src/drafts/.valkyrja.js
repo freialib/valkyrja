@@ -5,27 +5,40 @@ module.exports = {
 
 	// recomended Promise library: npm i -S lie
 
-	build: function (type, category, host) {
+	export: function (cwd, args, conf, valk) {
+		return valk.build().then(function () {
+			return valk.rsyncTo(cwd + '/deploy/build');
+		}).then(function () {
+			// specifics for creating container
+			// we recomend Docker workflow
+		});
+	},
+
+	send: function (cwd, args, conf) {
+		// specifics for sending container to server
+	},
+
+	build: function (cwd, args, conf, type, category, host) {
 		return true; // replace with Promise
 	},
 
-	check: function (type, category, host) {
+	check: function (cwd, args, conf, type, category, host) {
 		return true; // replace with Promise
 	},
 
-	clean: function (cwd) {
+	clean: function (cwd, args, conf) {
 		return true; // replace with Promise
 	},
 
-	confdryrun: function (conf, rsync, ssh, host) {
+	confdryrun: function (cwd, args, conf, rsync, ssh, host) {
 		// extra settings
 	},
 
-	confdeploy: function (conf, rsync, ssh, host) {
+	confdeploy: function (cwd, args, conf, rsync, ssh, host) {
 		// extra settings
 	},
 
-	confdiff: function (conf, rsync, ssh, host) {
+	confdiff: function (cwd, args, conf, rsync, ssh, host) {
 		// extra settings
 	}
 

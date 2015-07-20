@@ -1,5 +1,9 @@
 Vakyrja is a very light deployment helper that uses `rsync`, `ssh` and a few
-other basic tools.
+other basic tools. 
+
+It additionally also provides some basic placeholders for creating container based solutions; primarily so you can have all your deployment in one place.
+Since this is a `rsync` based solution containers are not supported beyond
+simple hook-ins for creating automatic builds and deployments.
 
 Install via,
 
@@ -37,6 +41,8 @@ on the command help.
 	clean      - remove junk
 	check      - run tools.check
 	build      - run tools.build
+	export     - create container
+	send       - send container to server
 	version    - print version
 	help       - help page
 
