@@ -15,7 +15,7 @@ module.exports = {
 	},
 
 	send: function (cwd, args, conf) {
-		// specifics for sending container to server
+		return false;
 	},
 
 	build: function (cwd, args, conf, type, category, host) {
@@ -28,6 +28,10 @@ module.exports = {
 
 	clean: function (cwd, args, conf) {
 		return true; // replace with Promise
+	},
+
+	confexport: function (cwd, args, conf, rsync) {
+		// extra settings
 	},
 
 	confdryrun: function (cwd, args, conf, rsync, ssh, host) {
