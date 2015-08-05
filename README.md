@@ -1,9 +1,6 @@
 Vakyrja is a very light deployment helper that uses `rsync`, `ssh` and a few
-other basic tools. 
+other basic tools.
 
-It additionally also provides some basic placeholders for creating container based solutions; primarily so you can have all your deployment in one place.
-Since this is a `rsync` based solution containers are not supported beyond
-simple hook-ins for creating automatic builds and deployments.
 
 Install via,
 
@@ -41,10 +38,26 @@ on the command help.
 	clean      - remove junk
 	check      - run tools.check
 	build      - run tools.build
-	export     - create container
-	send       - send container to server
 	version    - print version
 	help       - help page
+
+## Custom Commands
+
+Since most deployment scenarios often involve hard to foresee extra project
+specific tooling we provide a very simple and easy way to add custom commands
+into valkyjra's main command interface. Simply add any function to your
+`.valkyjra.js` tools file and so long as the name of the function isn't used
+by valkyrja already your function will get called when the name is invoked on
+the command line. The tools file created by `make` has an example "test" custom
+command. Feel free to add entries to `.valkyjra.toml` and `.valkyjra.user.toml`
+to help with configuring your custom command (you will have access to the
+merged version as the `conf` parameter).
+
+You can also add basic entries to the help screen by including a `customCmds`
+hash in your `.valkyjra.js` tools file; however we recommend documenting your
+custom commands proper in a README or similar file as such we only provide
+support for basic help entries with no details and do not require the hash to
+have an entry of the command for the custom command to work.
 
 ## Files
 
@@ -59,25 +72,25 @@ The `valk` command understands the following files,
    `.valkyrja.toml` before any command is executed.
 
  - `.valkyrja.js` is an optional tools file. `valk` will call the
-   corresponding function exported by the file and expect a `Promise`. Based 
-   on the `Promise` the deploy process will continue or halt. The expectation 
-   is that you perform any production build steps or any checks and resolve or 
-   reject the promise based on the result of your tooling; deployment will 
+   corresponding function exported by the file and expect a `Promise`. Based
+   on the `Promise` the deploy process will continue or halt. The expectation
+   is that you perform any production build steps or any checks and resolve or
+   reject the promise based on the result of your tooling; deployment will
    continue only if promise is fulfilled.
 
 ## Testing Deployment Strategy
 
-You don't need a server. 
+You don't need a server.
 
-Just point `valkyrja` to `localhost` and the path somewhere in your home 
-directory. For running commands you will also need to install a `ssh` server. 
+Just point `valkyrja` to `localhost` and the path somewhere in your home
+directory. For running commands you will also need to install a `ssh` server.
 
 For ubuntu you can install a `ssh` server very easily like so,
 
 	sudo apt-get install openssh-server
 
 It's annoying but even though you're `ssh`'ing to your machine and the user
-you're already logged in as the ssh server will still request you to 
+you're already logged in as the ssh server will still request you to
 authenticate, to avoid this you can just add add your local ssh keys to your
 local ssh keys... err, it makes sense trust me.
 
@@ -87,7 +100,7 @@ First check you have ssh keys generated,
 
 If you don't see `id_rsa` or `id_rsa.pub` run `ssh-keygen` to create them.
 
-Now you just need to copy your key to the server, in our case your local 
+Now you just need to copy your key to the server, in our case your local
 machine, this works exactly like it would for any non-`localhost` server,
 
 	ssh-copy-id `whoami`@localhost
@@ -101,7 +114,7 @@ it would ask you for the password to do that.
 
 ## Useful .valkyrja.js
 
-The generated `.valkyrja.js` is designed to only provide placeholders and not 
+The generated `.valkyrja.js` is designed to only provide placeholders and not
 blow up in your face when you try to do anything. Here is an example of one
 that is actually useful:
 
@@ -123,16 +136,16 @@ var excludeNPMDevDeps = function (rsync) {
 }
 
 module.exports = {
-	
+
 	build: function (type, category, host) {
 		var p = Promise.resolve();
 		p = p.then(cmd.f('gulp build --color'), cmd.silent);
 		return p;
 	},
-	
+
 	check: function (type, category, host) {
 		var p = Promise.resolve();
-		
+
 		if (type == 'all' || type == 'php') {
 			p = p.then(cmd.f([
 					'phpunit',
@@ -141,7 +154,7 @@ module.exports = {
 					'--color'
 				].join(' ')), cmd.silent);
 		}
-		
+
 		if (type == 'all' || type == 'js') {
 			p = p.then(cmd.f([
 					'mocha',
@@ -150,22 +163,22 @@ module.exports = {
 					'src/client/node_modules/.spec'
 				].join(' ')), cmd.silent);
 		}
-		
+
 		return p;
 	},
-	
+
 	confdryrun: function (conf, rsync, ssh, host) {
 		excludeNPMDevDeps(rsync);
 	},
-	
+
 	confdeploy: function (conf, rsync, ssh, host) {
 		excludeNPMDevDeps(rsync);
 	},
-	
+
 	confdiff: function (conf, rsync, ssh, host) {
 		excludeNPMDevDeps(rsync);
 	}
-	
+
 };
 ```
 
@@ -174,27 +187,27 @@ module.exports = {
 ### User must belong to group he is trying to change
 
 If the user trying to sync does not belong to the group he is trying to sync to,
-the sync command will fail when `chgrp` is executed due to the command in 
+the sync command will fail when `chgrp` is executed due to the command in
 question returning non `0` exit code.
 
 To add a user to the group the following must be executed on the server,
 
 	sudo usermod -a -G GROUPNAME YOURUSERNAME
 
-**Important Note!** make sure to have `-a` (ie. append) flag there or you will 
-remove the user from every other group. If you do that to yourself on your local 
-machine where you are in the `sudo`'er group you will remove yourself from the 
+**Important Note!** make sure to have `-a` (ie. append) flag there or you will
+remove the user from every other group. If you do that to yourself on your local
+machine where you are in the `sudo`'er group you will remove yourself from the
 `sudo`'er group preventing you from executing commands with `sudo`
 
 If you wish to run your own custom `chgrp` command you can disable the in-built
 one by setting `autogroup = false` on the root of the configuration file.
 
-You can access the host group via the `<<group>>` variable when adding 
+You can access the host group via the `<<group>>` variable when adding
 `postdeploy` commands. eg. `chgrp -R -P <<group>> .`
 
 If you need extra variables to achieve the command you can add them to servers,
-then they will be available just like how `group` is available as `<<group>>`. 
-But make sure they are strings and can never be anything but strings. If you 
+then they will be available just like how `group` is available as `<<group>>`.
+But make sure they are strings and can never be anything but strings. If you
 add a non-string parameter to the server, it will not be available.
 
 ### Ignore exit status of some commands
@@ -202,10 +215,10 @@ add a non-string parameter to the server, it will not be available.
 You may find some commands just annoyingly return non `0` for certain cases.
 Cases you don't really consider error cases. eg. `grep` returns non-`0` if it
 can't match anything. If you have `ssh.stop-on-errors` this can be even more
-annoying then just a little bit of red text every deploy. 
+annoying then just a little bit of red text every deploy.
 
-To ignore the exit code of a commands simply pass their output though another 
-command. eg. if you want to ignore the exit status of a `grep` commands then 
+To ignore the exit code of a commands simply pass their output though another
+command. eg. if you want to ignore the exit status of a `grep` commands then
 you would write the command as `grep ... | cat`
 
 ## Q&A

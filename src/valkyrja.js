@@ -29,11 +29,11 @@ if (cmd == 'version') {
 	process.exit(0);
 }
 
-if (['export', 'send', 'make', 'clean', 'help', 'deploy', 'ls', 'diff', 'dry-run', 'check', 'build', 'diff-file'].indexOf(cmd) == -1) {
-	console.log(c.red('valkyrja') + ': never heard of the command ' + c.magenta(cmd));
-	console.log('Need help? type ' + c.dim('valk help'));
-	process.exit(500);
+if (['make', 'clean', 'help', 'deploy', 'ls', 'diff', 'dry-run', 'check', 'build', 'diff-file'].indexOf(cmd) == -1) {
+	var customCmd = require('cmds/customCmd');
+	customCmd(cmd, cwd, args, draftdir);
 }
-
-var main = require('cmds/' + cmd);
-main(cwd, args, draftdir);
+else {
+	var main = require('cmds/' + cmd);
+	main(cwd, args, draftdir);
+}
